@@ -55,5 +55,5 @@ The migrator runs `db/migrations` once each (tracked in `schemaversions`), then 
 
 ## Status
 
-Pre-release. Done: schema, Misa and Kipper adapters (verified against the live sites),
-product-name normalisation. Next: KAM adapter (PDF), product matching, API, optimizer, app.
+Pre-release. Done: schema, Misa, Kipper and KAM adapters (verified against the live sites),
+product-name normalisation. Next: product matching, API, optimizer, app.
