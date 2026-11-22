@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Tally.Application.Ingestion;
 using Tally.Infrastructure.Ingestion.Http;
+using Tally.Infrastructure.Ingestion.Kam;
 using Tally.Infrastructure.Ingestion.Kipper;
 using Tally.Infrastructure.Ingestion.Misa;
 
@@ -14,7 +15,7 @@ public static class IngestionServiceCollectionExtensions
     /// <summary>
     /// Registers the crawler HttpClient, robots.txt policy and chain adapters.
     /// Worker host only: the API host must not carry crawler dependencies (backend/CLAUDE.md).
-    /// Binds <c>Crawlers</c> and <c>Crawlers:Misa</c> from configuration.
+    /// Binds <c>Crawlers</c>, <c>Crawlers:Misa</c>, <c>Crawlers:Kipper</c> and <c>Crawlers:Kam</c> from configuration.
     /// </summary>
     public static IServiceCollection AddTallyCrawlers(this IServiceCollection services)
     {
@@ -49,6 +50,14 @@ public static class IngestionServiceCollectionExtensions
             .Validate(o => o.PageSize > 0, "Crawlers:Kipper:PageSize must be positive")
             .Validate(o => o.MaxPages > 0, "Crawlers:Kipper:MaxPages must be positive");
 
+        services.AddOptions<KamOptions>()
+            .BindConfiguration(KamOptions.SectionName)
+            .Validate(o => o.ColumnEdges.Count == 0
+                           || (o.ColumnEdges.Count == 10 && o.ColumnEdges.Zip(o.ColumnEdges.Skip(1)).All(p => p.First < p.Second)),
+                "Crawlers:Kam:ColumnEdges must be empty or ten ascending x positions")
+            .Validate(o => o.MaxPdfBytes > 0, "Crawlers:Kam:MaxPdfBytes must be positive")
+            .Validate(o => o.MaxOrphanShare is >= 0 and < 1, "Crawlers:Kam:MaxOrphanShare must be in [0, 1)");
+
         services.AddSingleton<RobotsTxtPolicy>();
         services.AddSingleton<PoliteHttp>();
 
@@ -56,6 +65,8 @@ public static class IngestionServiceCollectionExtensions
         services.AddSingleton<IPriceSourceAdapter>(sp => sp.GetRequiredService<MisaAdapter>());
         services.AddSingleton<KipperAdapter>();
         services.AddSingleton<IPriceSourceAdapter>(sp => sp.GetRequiredService<KipperAdapter>());
+        services.AddSingleton<KamAdapter>();
+        services.AddSingleton<IPriceSourceAdapter>(sp => sp.GetRequiredService<KamAdapter>());
 
         return services;
     }

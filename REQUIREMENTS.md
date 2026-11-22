@@ -89,7 +89,7 @@ contact URL in the User-Agent, pull once nightly, and cache aggressively.
 
 ---
 
-## 4. Data sources (verified 2026-11-20; Kipper and Misa re-verified against the live sites 2026-11-22)
+## 4. Data sources (verified 2026-11-20; all three re-verified against the live sites 2026-11-22)
 
 ### 4.1 Kipper — JSON, easiest
 
@@ -183,6 +183,14 @@ POST https://kam.com.mk/ShopsWeb/LoadShopList
 This single call gives GPS, opening hours **including Sunday**, phone, store facilities, and
 the pointer to the price list. No manual store curation needed for KAM.
 
+Re-verified 2026-11-22: 85 stores, each with exactly one `ShopFiles` entry, all pointing at
+the same day (`2026/11/22/{Id}.pdf`) with the same `DateUploaded` (`"\/Date(1795302000000)\/"`
+in the raw JSON, i.e. midnight Skopje time of the upload day). `Name` can carry a trailing
+space (`"Генц "`). Hours are free text in varying forms (`08:30-21:00`, `07:30 - 22:00`,
+`08:00 – 21:00`, `неработен ден`). `Tags` also has `cookedfood` and a `fishFood` spelling.
+No `ETag` or `Last-Modified` on the store list. **`robots.txt` is HTTP 200 with an empty
+body**, so nothing is disallowed.
+
 **Price list** is a plain GET at `https://kam.com.mk/{RelativePath}`:
 
 ```
@@ -211,11 +219,55 @@ Sample extracted rows:
 timestamp of `18.11.2026 5:52:12AM`. Roughly two days behind. Surface the publication date
 in the UI rather than implying live prices.
 
+**The URL date is not the price date** (verified 2026-11-22). KAM re-posts every store's
+current file under each new day's path: `2026/11/20/73.pdf` and `2026/11/22/73.pdf` were
+byte-identical, both stamped 18.11. The stamp is the line `Датум и време на последно
+ажурирање на цените: 18.11.2026  5:46:25AM` above the table (12-hour clock, Skopje time).
+The adapter uses that as `published_on` and fails the run if it is missing.
+
+**Struga's stores on 2026-11-22:** 38 (Генц) 167 pages / 1,836 rows, 64 (Струга - 3)
+161 pages, 69 (Струга - 5) **an empty table**: header only, stamped `13.10.2026`. Store 69
+has not published prices for over a month. The adapter reports this as "no price list"
+(`KamNoPriceListException`), distinct from a parse failure.
+
+**Missing files are not 404.** Any path under the site, including dated PDFs that do not
+exist (`2026/11/21/69.pdf`), answers HTTP 200 with an empty body and no Content-Type.
+`HEAD` answers 200 with `Content-Length: 0` for everything, so it cannot be used to probe.
+Responses carry `Cache-Control: no-cache, no-store` and no validators.
+
 **Caveat: naive text extraction interleaves the columns.** Use coordinate-based extraction
 (word positions), not string splitting. In C#, **PdfPig** (Apache 2.0) is the natural choice.
 
-**Opportunity:** the dated URL path is predictable, so `/2026/11/19/73.pdf` and earlier
-likely resolve. If KAM retains old files, price history can be backfilled from day one.
+**Layout, measured 2026-11-22** (identical on every page and every Struga file; landscape
+841 × 595 pt; Crystal Reports; two subset Tahoma fonts, Cyrillic in one, Latin/digits in
+the other; spaces drawn as glyphs):
+
+- Vertical rules at x = 6, 84.75, 166.5, 254.25, 336.75, 430.5, 522.75, 602, 699, 800.25:
+  nine columns. `Цена со попуст` and `Попуст(%)` share column 7: the cell reads
+  `102ден.` with `Попуст: 11%` on the line below. `Промотивна или попустна цена` is a group
+  heading over columns 7–9.
+- The header repeats on every page. 11 rows per page (10 on the last).
+- Rows are a fixed **37.45 pt** tall; cells are **top-aligned**, text centred horizontally
+  and wrapped onto up to three lines. Relative to each row's selling-price baseline, all
+  143,631 glyphs of store 38 sat between **+2 and −18.55 pt**. So rows are found by
+  anchoring on the selling-price line (`\d ден` in column 2) and giving each glyph to the
+  nearest anchor at most 6 pt below it, within 30 pt. With that rule: 1,836 rows, zero
+  unplaced glyphs. Wrapped lines always break between words (5,825 checked), so they join
+  with a space.
+- **Unit-price labels are wrong in a systematic way.** `1 гр` (146 rows in store 38) is the
+  price per **kilogram** (`ДУО КЕКС ГРИСОН 500ГР`, 102 den: `1 гр = 204.00 ден.`); `1 мл`
+  (182 rows) is per **litre**. `100 кг` and `100 пар` appear on goods sold by weight and
+  cannot be trusted. `100 мл` also appears on solid goods (400 g yoghurt). The adapter
+  rewrites 1G → 1KG and 1ML → 1L and drops the untrustworthy bases.
+- 15 rows have `промотивна цена`, a promo price and a window, **but no regular price**.
+- Availability was `Да` on every row of store 38.
+- No article code or EAN anywhere in the PDF. Source key is the hashed name.
+
+~~**Opportunity:** the dated URL path is predictable, so `/2026/11/19/73.pdf` and earlier
+likely resolve. If KAM retains old files, price history can be backfilled from day one.~~
+**Checked 2026-11-22: no backfill.** Old dated paths that still resolve hold the same
+current snapshot (`2026/11/20/73.pdf` = `2026/11/22/73.pdf`), and others answer with an
+empty body. History has to be collected going forward.
 
 ### 4.3 Misa — simple GET, easiest to parse
 
@@ -318,6 +370,10 @@ Two observations from the coordinates:
   available on foot with almost no travel cost, which is a strong case for walking mode.
 - **Sunday hours vary widely** (one closes 19:30, another runs to 22:00). The optimizer
   must respect per-store Sunday hours, not a single store-open assumption.
+- **KAM Струга-5 (69) publishes an empty price table** (2026-11-22, stamped 13.10.2026).
+  It is the store 210 m from Kipper 131, so the walking comparison above has no KAM prices
+  until KAM fixes it. The app must show that store as having no current prices rather than
+  drop it silently.
 
 Kipper does not expose opening hours in a structured form; capture manually.
 
@@ -355,7 +411,7 @@ availability, category string, promo window, publication date.
 | Chain | Fingerprint |
 |---|---|
 | Kipper | "last price update" timestamp on the store page |
-| KAM | `ShopFiles[0].RelativePath` + `DateUploaded` from the store-list JSON |
+| KAM | `ShopFiles[0].RelativePath` + `DateUploaded` from the store-list JSON. Changes **every night**, because KAM re-posts the unchanged file under the new day's path; a no-change night still downloads ~0.5 MB per store. Real change is visible in `published_on` (the PDF's own stamp). The store list is cached across probes, so probing all KAM stores is one request |
 | Misa | `ETag` / `Last-Modified`, falling back to a hash of the response |
 
 ### 5.3 Schedule
@@ -666,9 +722,11 @@ site together, and so the API contract is versioned atomically with both sides.
 
 5. Worker as a hosted service with Quartz in-process, or a separate scheduled container?
 6. OpenAPI spec generated at build time, or committed to `contracts/`?
-7. Does any chain expose EAN/barcode? Check while building each adapter. Even one would
+7. ~~Does any chain expose EAN/barcode?~~ **No (2026-11-22):** none of Kipper, Misa or KAM.
+   Kipper's image file name looks like an article code; KAM and Misa have none. Even one would
    anchor the whole matching pipeline.
-8. Does KAM retain historical PDFs at dated URLs? If so, backfill price history at launch.
+8. ~~Does KAM retain historical PDFs at dated URLs?~~ **No** (§4.2): old paths hold the
+   current snapshot or nothing.
 
 ---
 
