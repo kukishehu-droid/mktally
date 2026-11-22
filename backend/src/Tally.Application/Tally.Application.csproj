@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Use cases and port interfaces, organised by feature (Catalog/, Baskets/, Ingestion/, Stores/). -->
+  <ItemGroup>
+    <ProjectReference Include="..\Tally.Domain\Tally.Domain.csproj" />
+  </ItemGroup>
+</Project>

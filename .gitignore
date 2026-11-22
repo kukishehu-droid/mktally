@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+TestResults/
+
+# Local configuration and secrets
+appsettings.*.local.json
+*.env
+.env*
+
+# React Native / Node
+node_modules/
+.expo/
+ios/Pods/
+android/.gradle/
+android/app/build/
+
+# OS
+.DS_Store
+Thumbs.db

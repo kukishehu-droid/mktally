@@ -1,0 +1,611 @@
+<title>Tally Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F6F7F3; --surface:#FFFFFF; --surface-2:#EFF1EA; --surface-3:#E5E8DE;
+  --ink:#171E18; --ink-2:#4A544C; --ink-3:#848D84;
+  --rule:#DCE0D5; --rule-2:#C9CFC0;
+  --accent:#9A6B00; --accent-ink:#5E4100; --accent-soft:#F8EDD2;
+  --good:#2D6A4F; --good-soft:#DFEFE6;
+  --warn:#A3472F; --warn-soft:#F7E6E0;
+  --kipper:#2F5E8C; --kam:#A33F35; --misa:#2F7565;
+  --phone-bezel:#1E241D; --shadow:0 1px 2px rgba(23,30,24,.07),0 8px 28px rgba(23,30,24,.08);
+  --f-ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#111510; --surface:#1A1F19; --surface-2:#222820; --surface-3:#2B322A;
+    --ink:#E9EDE6; --ink-2:#A6AFA4; --ink-3:#79827A;
+    --rule:#2D342B; --rule-2:#3C443A;
+    --accent:#E0AC4A; --accent-ink:#F0C877; --accent-soft:#30260F;
+    --good:#74C49B; --good-soft:#16271E;
+    --warn:#E08D73; --warn-soft:#2C1A14;
+    --kipper:#79A9D6; --kam:#DD8277; --misa:#6EBCA6;
+    --phone-bezel:#050705; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111510; --surface:#1A1F19; --surface-2:#222820; --surface-3:#2B322A;
+  --ink:#E9EDE6; --ink-2:#A6AFA4; --ink-3:#79827A;
+  --rule:#2D342B; --rule-2:#3C443A;
+  --accent:#E0AC4A; --accent-ink:#F0C877; --accent-soft:#30260F;
+  --good:#74C49B; --good-soft:#16271E;
+  --warn:#E08D73; --warn-soft:#2C1A14;
+  --kipper:#79A9D6; --kam:#DD8277; --misa:#6EBCA6;
+  --phone-bezel:#050705; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-ui); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:56px 28px 96px}
+
+/* ---------- page chrome ---------- */
+.masthead{border-bottom:1px solid var(--rule); padding-bottom:28px; margin-bottom:12px}
+.eyebrow{
+  font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); font-weight:600; margin:0 0 14px;
+}
+h1{
+  font-size:clamp(34px,5vw,52px); line-height:1.02; font-weight:700;
+  letter-spacing:-.03em; margin:0 0 16px; text-wrap:balance;
+}
+.standfirst{font-size:17px; color:var(--ink-2); max-width:62ch; margin:0}
+.meta{
+  display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;
+  font-family:var(--f-mono); font-size:11.5px;
+}
+.meta span{
+  border:1px solid var(--rule-2); border-radius:3px;
+  padding:4px 9px; color:var(--ink-2);
+}
+
+section{padding-top:60px}
+.sec-head{display:flex; gap:16px; align-items:baseline; margin-bottom:8px}
+.sec-num{
+  font-family:var(--f-mono); font-size:12px; color:var(--accent);
+  font-weight:600; flex:none; padding-top:5px;
+}
+h2{font-size:25px; font-weight:600; letter-spacing:-.02em; margin:0; text-wrap:balance}
+.sec-note{color:var(--ink-2); max-width:64ch; margin:0 0 30px 32px; font-size:15.5px}
+.sec-note b{color:var(--ink); font-weight:600}
+
+.rack{display:flex; flex-wrap:wrap; gap:40px; margin-left:32px; align-items:flex-start}
+.unit{width:308px; flex:none}
+.caption{
+  margin-top:16px; font-size:13.5px; color:var(--ink-2); line-height:1.5;
+}
+.caption b{display:block; color:var(--ink); font-weight:600; margin-bottom:3px; font-size:14px}
+
+/* ---------- phone ---------- */
+.phone{
+  width:308px; border-radius:38px; background:var(--phone-bezel);
+  padding:9px; box-shadow:var(--shadow);
+}
+.screen{
+  background:var(--surface); border-radius:30px; overflow:hidden;
+  height:638px; display:flex; flex-direction:column; position:relative;
+}
+.statusbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:11px 20px 5px; font-family:var(--f-mono); font-size:10.5px;
+  color:var(--ink); font-weight:500; flex:none;
+}
+.statusbar i{font-style:normal; letter-spacing:.06em}
+.appbar{
+  padding:8px 18px 14px; flex:none;
+  display:flex; align-items:center; gap:10px;
+}
+.appbar h3{font-size:19px; font-weight:600; letter-spacing:-.02em; margin:0; flex:1}
+.back{color:var(--ink-2); font-size:17px; line-height:1}
+.body{flex:1; overflow:hidden; padding:0 18px; display:flex; flex-direction:column; gap:10px}
+.body.flush{padding:0}
+
+/* ---------- shared bits ---------- */
+.den{font-family:var(--f-mono); font-variant-numeric:tabular-nums; font-weight:500}
+.chip{
+  display:inline-flex; align-items:center; gap:5px; border-radius:100px;
+  padding:3px 9px; font-size:10.5px; font-weight:600; letter-spacing:.02em;
+}
+.chip.good{background:var(--good-soft); color:var(--good)}
+.chip.warn{background:var(--warn-soft); color:var(--warn)}
+.chip.acc{background:var(--accent-soft); color:var(--accent)}
+.dot{width:7px; height:7px; border-radius:50%; flex:none}
+.d-kipper{background:var(--kipper)} .d-kam{background:var(--kam)} .d-misa{background:var(--misa)}
+.mk{font-size:13.5px; font-weight:500; line-height:1.3}
+.en{font-size:11.5px; color:var(--ink-3); line-height:1.3; margin-top:1px}
+
+.search{
+  display:flex; align-items:center; gap:9px; background:var(--surface-2);
+  border:1px solid var(--rule); border-radius:11px; padding:11px 13px; flex:none;
+}
+.search .q{font-size:14.5px; font-weight:500; flex:1}
+.search .cur{width:1.5px; height:16px; background:var(--accent); display:inline-block}
+
+.sheet{
+  border:1px solid var(--rule); border-radius:12px; background:var(--surface);
+  overflow:hidden; flex:none;
+}
+.row{
+  display:flex; align-items:center; gap:11px; padding:11px 13px;
+  border-bottom:1px solid var(--rule);
+}
+.row:last-child{border-bottom:none}
+.row .grow{flex:1; min-width:0}
+.row .trail{text-align:right; flex:none; font-size:13px}
+.sub{font-size:11px; color:var(--ink-3)}
+
+.grouprow{background:var(--accent-soft)}
+.grouprow .mk{color:var(--accent-ink)}
+
+.cta{
+  margin:0 0 16px; flex:none; background:var(--ink); color:var(--ground);
+  border-radius:12px; padding:14px; text-align:center;
+  font-weight:600; font-size:14.5px; letter-spacing:-.01em;
+  display:flex; justify-content:center; align-items:center; gap:9px;
+}
+.cta .den{color:var(--ground); opacity:.72; font-weight:500}
+
+/* option cards */
+.opt{
+  border:1px solid var(--rule); border-radius:13px; padding:13px;
+  display:flex; flex-direction:column; gap:9px; background:var(--surface);
+}
+.opt.pick{border-color:var(--accent); border-width:1.5px; background:var(--accent-soft)}
+.opt-top{display:flex; align-items:flex-start; gap:10px}
+.opt-title{font-size:14.5px; font-weight:600; letter-spacing:-.01em; flex:1; line-height:1.25}
+.opt-price{font-size:19px; font-weight:600; letter-spacing:-.02em}
+.opt-stores{display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--ink-2)}
+.opt-foot{
+  display:flex; gap:7px; flex-wrap:wrap; padding-top:9px;
+  border-top:1px solid var(--rule);
+}
+.opt.pick .opt-foot{border-top-color:var(--rule-2)}
+.metric{font-size:11px; color:var(--ink-2)}
+.metric b{font-family:var(--f-mono); color:var(--ink); font-weight:600}
+
+/* route — checkpoint line */
+.trip{display:flex; flex-direction:column}
+.tnode{display:flex; gap:12px}
+.rail{width:24px; flex:none; display:flex; flex-direction:column; align-items:center}
+.bead{
+  width:24px; height:24px; border-radius:50%; flex:none; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+}
+.bead.start{
+  width:12px; height:12px; margin:6px 0; background:var(--surface);
+  border:2.5px solid var(--ink-3);
+}
+.p-kam{background:var(--kam)} .p-misa{background:var(--misa)}
+.wire{flex:1; width:2px; background:var(--rule-2); margin:4px 0}
+.tbody{flex:1; min-width:0; padding-bottom:2px}
+.hop{
+  display:flex; align-items:center; gap:7px; padding:11px 0 13px;
+  font-family:var(--f-mono); font-size:10.5px; color:var(--ink-3); letter-spacing:.02em;
+}
+.hop::before{content:""; flex:none; width:14px; height:1px; background:var(--rule-2)}
+.items{margin-top:8px; display:flex; flex-direction:column; gap:5px}
+.item{display:flex; gap:8px; font-size:12px; align-items:baseline}
+.item .grow{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.stot{
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-top:9px; padding-top:8px; border-top:1px solid var(--rule);
+}
+
+/* settings */
+.setrow{
+  display:flex; align-items:center; gap:11px; padding:12px 0;
+  border-bottom:1px solid var(--rule);
+}
+.toggle{
+  width:40px; height:23px; border-radius:100px; background:var(--ink);
+  position:relative; flex:none;
+}
+.toggle.off{background:var(--rule-2)}
+.toggle::after{
+  content:""; position:absolute; top:3px; left:20px; width:17px; height:17px;
+  border-radius:50%; background:var(--surface);
+}
+.toggle.off::after{left:3px}
+.seg{display:flex; background:var(--surface-2); border-radius:9px; padding:3px; gap:3px; flex:none}
+.seg span{font-size:12px; padding:5px 12px; border-radius:7px; color:var(--ink-2); font-weight:500}
+.seg span.on{background:var(--surface); color:var(--ink); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.09)}
+.slider{height:4px; border-radius:4px; background:var(--rule-2); position:relative; margin:14px 0 6px}
+.slider i{position:absolute; left:0; top:0; height:4px; width:46%; background:var(--accent); border-radius:4px}
+.slider b{
+  position:absolute; left:46%; top:-6px; width:16px; height:16px; border-radius:50%;
+  background:var(--surface); border:2px solid var(--accent); margin-left:-8px;
+}
+
+.ticker{
+  font-family:var(--f-mono); font-size:10px; color:var(--ink-3);
+  text-align:center; padding:9px 0 14px; flex:none; letter-spacing:.02em;
+}
+
+footer{
+  margin-top:80px; padding-top:26px; border-top:1px solid var(--rule);
+  color:var(--ink-3); font-size:13px; max-width:64ch;
+}
+@media (max-width:720px){
+  .wrap{padding:36px 16px 64px}
+  .sec-note,.rack{margin-left:0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Tally · v1 concept</p>
+  <h1>Grocery lists that know<br>where to shop</h1>
+  <p class="standfirst">Six screens covering the three flows that matter: resolving what a person actually meant, showing the money-versus-time tradeoff honestly, and walking them through a route. Prices and store names are real, pulled from the published price lists of Kipper, KAM and Misa in Struga.</p>
+  <div class="meta">
+    <span>Struga · 8 stores</span>
+    <span>3 chains</span>
+    <span>EN interface · MK/SQ product names</span>
+    <span>React Native</span>
+  </div>
+</header>
+
+<!-- 1 -->
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>Building the list</h2></div>
+  <p class="sec-note">The hardest UX problem in the app is that "milk" is not a product. Free text resolves against the canonical catalogue, which offers <b>a group</b> at the top (cheapest qualifying item per store, where the savings actually are) and <b>specific products</b> below for people who care about brand.</p>
+  <div class="rack">
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:41</i><i>LTE ▪ 84%</i></div>
+        <div class="appbar"><h3>Add to list</h3></div>
+        <div class="body">
+          <div class="search"><span style="color:var(--ink-3)">⌕</span><span class="q">milk<span class="cur"></span></span></div>
+          <div class="sheet">
+            <div class="row grouprow">
+              <div class="grow">
+                <div class="mk">Milk · any brand</div>
+                <div class="en">24 products across 3 markets</div>
+              </div>
+              <div class="trail"><span class="chip acc">Group</span></div>
+            </div>
+            <div class="row">
+              <div class="grow">
+                <div class="mk">МЛЕКО ЗДРАВЈЕ 2.8% 1Л</div>
+                <div class="en">Zdravje milk 2.8% · 1 L</div>
+              </div>
+              <div class="trail"><div class="den">from 59</div><div class="sub">den</div></div>
+            </div>
+            <div class="row">
+              <div class="grow">
+                <div class="mk">МЛЕКО ИДЕАЛ 3.2% 1Л</div>
+                <div class="en">Ideal milk 3.2% · 1 L</div>
+              </div>
+              <div class="trail"><div class="den">from 68</div><div class="sub">den</div></div>
+            </div>
+            <div class="row">
+              <div class="grow">
+                <div class="mk">МЛЕКО БИМИЛК 2.8% 500МЛ</div>
+                <div class="en">Bimilk 2.8% · 500 ml</div>
+              </div>
+              <div class="trail"><div class="den">from 38</div><div class="sub">den</div></div>
+            </div>
+            <div class="row">
+              <div class="grow">
+                <div class="mk">КОКОСОВО МЛЕКО 400МЛ</div>
+                <div class="en">Coconut milk · 400 ml</div>
+              </div>
+              <div class="trail"><div class="den">from 94</div><div class="sub">den</div></div>
+            </div>
+          </div>
+          <p class="sub" style="margin:2px 2px 0">Matches Macedonian, Albanian and English names.</p>
+        </div>
+        <div class="ticker">qumësht · млеко · milk</div>
+      </div></div>
+      <p class="caption"><b>Resolve, don't guess</b>The group row sits first and is visually distinct. Picking a specific product narrows the comparison, so it is a deliberate choice rather than the default.</p>
+    </div>
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:43</i><i>LTE ▪ 84%</i></div>
+        <div class="appbar"><h3>My list</h3><span class="chip acc">8 items</span></div>
+        <div class="body">
+          <div class="sheet" style="flex:1; overflow:hidden">
+            <div class="row"><div class="grow"><div class="mk">Milk · 1 L</div><div class="en">any brand</div></div><div class="trail"><div class="den">59</div><div class="sub">at KAM</div></div></div>
+            <div class="row"><div class="grow"><div class="mk">ЛЕБ ТОНУС 450Г</div><div class="en">Tonus bread · 450 g</div></div><div class="trail"><div class="den">75</div><div class="sub">at KAM</div></div></div>
+            <div class="row"><div class="grow"><div class="mk">АВОКАДО 1КГ</div><div class="en">Avocado · 1 kg</div></div><div class="trail"><div class="den">165</div><div class="sub">at Misa</div></div></div>
+            <div class="row"><div class="grow"><div class="mk">ЈАЈЦА 10БР</div><div class="en">Eggs · 10 pcs</div></div><div class="trail"><div class="den">119</div><div class="sub">at KAM</div></div></div>
+            <div class="row"><div class="grow"><div class="mk">ПИЛЕШКИ ГРАДИ 1КГ</div><div class="en">Chicken breast · 1 kg</div></div><div class="trail"><div class="den">229</div><div class="sub"><span style="color:var(--good)">promo</span></div></div></div>
+            <div class="row"><div class="grow"><div class="mk">КАФЕ ГРАНД 200Г</div><div class="en">Grand coffee · 200 g</div></div><div class="trail"><div class="den">159</div><div class="sub"><span style="color:var(--good)">promo</span></div></div></div>
+            <div class="row"><div class="grow"><div class="mk">ЖЕЛЕ MILORD 200Г</div><div class="en">Milord jelly · 200 g</div></div><div class="trail"><div class="den">46</div><div class="sub">at KAM</div></div></div>
+            <div class="row"><div class="grow"><div class="mk">АГРИНА ПОМФРИТ 1КГ</div><div class="en">Agrina fries · 1 kg</div></div><div class="trail"><div class="den">112</div><div class="sub">at Misa</div></div></div>
+          </div>
+          <div class="cta">Compare 8 items <span class="den">from 964 den</span></div>
+        </div>
+      </div></div>
+      <p class="caption"><b>Live cheapest, per row</b>Each row already shows the best price found and where, so the list is useful before anyone taps compare. Promo prices are flagged because they expire.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 2 -->
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>The tradeoff, stated plainly</h2></div>
+  <p class="sec-note">This is the screen the product lives or dies on. Rather than collapsing money, time and fuel into one opaque score, every option shows all three and the app explains its pick in a sentence. The <b>cheapest option is deliberately not the recommended one</b>, and the incomplete basket is shown rather than hidden.</p>
+  <div class="rack">
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:44</i><i>LTE ▪ 83%</i></div>
+        <div class="appbar"><span class="back">‹</span><h3>Options</h3></div>
+        <div class="body" style="gap:9px">
+
+          <div class="opt pick">
+            <div class="opt-top">
+              <div class="opt-title">Two stops<div class="chip good" style="margin-top:5px">Recommended</div></div>
+              <div class="opt-price den">964</div>
+            </div>
+            <div class="opt-stores"><span class="dot d-kam"></span>KAM Струга-3 <span style="color:var(--ink-3)">→</span> <span class="dot d-misa"></span>Миса Пазар</div>
+            <div class="opt-foot">
+              <span class="metric">8 of 8 items</span>
+              <span class="metric">·</span>
+              <span class="metric"><b>31</b> min</span>
+              <span class="metric">·</span>
+              <span class="metric"><b>24</b> den fuel</span>
+              <span class="metric">·</span>
+              <span class="metric" style="color:var(--good)">net <b style="color:var(--good)">+49</b> den</span>
+            </div>
+          </div>
+
+          <div class="opt">
+            <div class="opt-top">
+              <div class="opt-title">One stop</div>
+              <div class="opt-price den">1 037</div>
+            </div>
+            <div class="opt-stores"><span class="dot d-misa"></span>Миса Пазар Струга · 1.1 km</div>
+            <div class="opt-foot">
+              <span class="metric">8 of 8 items</span>
+              <span class="metric">·</span>
+              <span class="metric"><b>16</b> min</span>
+              <span class="metric">·</span>
+              <span class="metric"><b>11</b> den fuel</span>
+            </div>
+          </div>
+
+          <div class="opt">
+            <div class="opt-top">
+              <div class="opt-title">One stop, cheapest</div>
+              <div class="opt-price den">832</div>
+            </div>
+            <div class="opt-stores"><span class="dot d-kam"></span>KAM Струга-3 · 1.4 km</div>
+            <div class="opt-foot">
+              <span class="chip warn">7 of 8 · no Авокадо</span>
+            </div>
+          </div>
+
+          <div class="opt">
+            <div class="opt-top">
+              <div class="opt-title">Three stops</div>
+              <div class="opt-price den">961</div>
+            </div>
+            <div class="opt-stores"><span class="dot d-kam"></span><span class="dot d-misa"></span><span class="dot d-kipper"></span> adds Кипер 131</div>
+            <div class="opt-foot">
+              <span class="metric">8 of 8 items</span>
+              <span class="metric">·</span>
+              <span class="metric"><b>45</b> min</span>
+              <span class="metric">·</span>
+              <span class="metric" style="color:var(--warn)">14 min more to save <b style="color:var(--warn)">3</b> den</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="ticker">prices published 18–20 Nov</div>
+      </div></div>
+      <p class="caption"><b>Four honest options</b>Cheapest (832 den) is incomplete and labelled as such. Three stops is barely cheaper than two and says so in the same breath, which is usually the truth.</p>
+    </div>
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:45</i><i>LTE ▪ 83%</i></div>
+        <div class="appbar"><span class="back">‹</span><h3>Why two stops</h3></div>
+        <div class="body">
+          <div class="sheet" style="padding:15px 14px">
+            <div style="font-size:14px; line-height:1.55; color:var(--ink-2)">
+              Two stops costs <b style="color:var(--ink)">15 minutes</b> and <b style="color:var(--ink)">13 den</b> more fuel than staying at Миса, and saves <b style="color:var(--good)">73 den</b>. At your time value of 300 den/hour that nets out <b style="color:var(--good)">+49 den</b> ahead.
+              <br><br>
+              Adding Кипер 131 as a third stop saves only <b style="color:var(--warn)">3 den</b> more for another 14 minutes, so it is not worth the trip today.
+            </div>
+          </div>
+          <div class="sheet">
+            <div class="row"><div class="grow"><div class="mk">Basket at Миса only</div></div><div class="trail den">1 037</div></div>
+            <div class="row"><div class="grow"><div class="mk">Split across two</div><div class="en">5 items KAM · 3 items Миса</div></div><div class="trail den" style="color:var(--good)">964</div></div>
+            <div class="row"><div class="grow"><div class="mk">Fuel, 3.4 km round trip</div><div class="en">6.2 L/100km · 86 den/L</div></div><div class="trail den" style="color:var(--warn)">+24</div></div>
+            <div class="row"><div class="grow"><div class="mk">Extra time</div><div class="en">15 min at 300 den/hour</div></div><div class="trail den" style="color:var(--warn)">+75</div></div>
+          </div>
+          <div class="sheet" style="background:var(--good-soft); border-color:var(--good)">
+            <div class="row" style="border:none">
+              <div class="grow"><div class="mk" style="color:var(--good)">Net benefit</div></div>
+              <div class="trail"><span class="den" style="font-size:17px; color:var(--good)">+49 den</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ticker">tap any figure to change your assumptions</div>
+      </div></div>
+      <p class="caption"><b>Show the arithmetic</b>Every number the recommendation rests on is visible and editable. If someone disagrees with 300 den/hour, they change it rather than distrusting the app.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Shopping the route</h2></div>
+  <p class="sec-note">No map. The people using this already know their own town, so the route is a <b>checkpoint line</b>: you, then each stop, with the distance between. Distances come from a hand-curated matrix of the eight Struga stores rather than a routing API, which is both more accurate and removes a native map dependency entirely. Opening hours come from the chains' own published store data.</p>
+  <div class="rack">
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:46</i><i>LTE ▪ 82%</i></div>
+        <div class="appbar"><span class="back">‹</span><h3>Your route</h3><span class="chip good">964 den</span></div>
+        <div class="body">
+          <div class="trip">
+
+            <div class="tnode">
+              <div class="rail"><span class="bead start"></span><span class="wire"></span></div>
+              <div class="tbody">
+                <div class="mk">You</div>
+                <div class="en">ул. Партизанска бб</div>
+                <div class="hop">450 m · 6 min walk</div>
+              </div>
+            </div>
+
+            <div class="tnode">
+              <div class="rail"><span class="bead p-kam">1</span><span class="wire"></span></div>
+              <div class="tbody">
+                <div class="mk">KAM Струга-3</div>
+                <div class="en">ул. ЈНА бр.1 · closes 21:00</div>
+                <div class="items">
+                  <div class="item"><span class="grow">Milk 1 L · Здравје</span><span class="den">59</span></div>
+                  <div class="item"><span class="grow">ЛЕБ ТОНУС 450Г</span><span class="den">75</span></div>
+                  <div class="item"><span class="grow">ЈАЈЦА 10БР</span><span class="den">119</span></div>
+                  <div class="item"><span class="grow">ПИЛЕШКИ ГРАДИ 1КГ</span><span class="den" style="color:var(--good)">229</span></div>
+                  <div class="item"><span class="grow">ЖЕЛЕ MILORD 200Г</span><span class="den">46</span></div>
+                </div>
+                <div class="stot"><span class="sub">5 items</span><span class="den" style="font-size:14px">528 den</span></div>
+                <div class="hop">900 m · 11 min walk</div>
+              </div>
+            </div>
+
+            <div class="tnode">
+              <div class="rail"><span class="bead p-misa">2</span></div>
+              <div class="tbody">
+                <div class="mk">Миса Пазар Струга</div>
+                <div class="en">ул. Маршал Тито · closes 21:00</div>
+                <div class="items">
+                  <div class="item"><span class="grow">АВОКАДО 1КГ</span><span class="den">165</span></div>
+                  <div class="item"><span class="grow">КАФЕ ГРАНД 200Г</span><span class="den" style="color:var(--good)">159</span></div>
+                  <div class="item"><span class="grow">АГРИНА ПОМФРИТ 1КГ</span><span class="den">112</span></div>
+                </div>
+                <div class="stot"><span class="sub">3 items</span><span class="den" style="font-size:14px">436 den</span></div>
+              </div>
+            </div>
+
+          </div>
+          <div class="cta">Start shopping <span class="den">964 den</span></div>
+        </div>
+      </div></div>
+      <p class="caption"><b>A checklist, not a map app</b>The screen's only job is telling you what to pick up at each stop and what it should cost at the till. Segment labels switch to drive times in car mode.</p>
+    </div>
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:47</i><i>LTE ▪ 82%</i></div>
+        <div class="appbar"><span class="back">‹</span><h3>ЛЕБ ТОНУС 450Г</h3></div>
+        <div class="body">
+          <p class="en" style="margin:0 2px 2px; font-size:12.5px">Tonus bread, standard, 450 g · wholegrain</p>
+          <div class="sheet">
+            <div class="row">
+              <span class="dot d-kam"></span>
+              <div class="grow"><div class="mk">KAM Струга-3</div><div class="sub">1.4 km · 16.66 den/100 g</div></div>
+              <div class="trail"><div class="den" style="color:var(--good); font-size:15px">75</div><div class="sub" style="color:var(--good)">cheapest</div></div>
+            </div>
+            <div class="row">
+              <span class="dot d-kam"></span>
+              <div class="grow"><div class="mk">KAM Струга-5</div><div class="sub">2.2 km · 16.66 den/100 g</div></div>
+              <div class="trail"><div class="den" style="font-size:15px">75</div></div>
+            </div>
+            <div class="row">
+              <span class="dot d-misa"></span>
+              <div class="grow"><div class="mk">Миса Пазар Струга</div><div class="sub">1.1 km · 17.55 den/100 g</div></div>
+              <div class="trail"><div class="den" style="font-size:15px">79</div></div>
+            </div>
+            <div class="row">
+              <span class="dot d-misa"></span>
+              <div class="grow"><div class="mk">Миса Струга 2 ЈНА</div><div class="sub">1.5 km · 17.55 den/100 g</div></div>
+              <div class="trail"><div class="den" style="font-size:15px">79</div></div>
+            </div>
+            <div class="row">
+              <span class="dot d-kipper"></span>
+              <div class="grow"><div class="mk">Кипер 131</div><div class="sub">1.9 km · 18.22 den/100 g</div></div>
+              <div class="trail"><div class="den" style="font-size:15px">82</div></div>
+            </div>
+            <div class="row" style="opacity:.5">
+              <span class="dot d-kipper"></span>
+              <div class="grow"><div class="mk">Кипер 084</div><div class="sub">2.6 km</div></div>
+              <div class="trail"><span class="chip warn">not listed</span></div>
+            </div>
+          </div>
+          <div class="sheet" style="background:var(--surface-2)">
+            <div class="row" style="border:none">
+              <div class="grow"><div class="sub" style="line-height:1.45">KAM published 18 Nov · Миса and Кипер published 20 Nov. Prices are the chains' own published lists, not live shelf checks.</div></div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <p class="caption"><b>Unit price and publish date</b>Per-100g makes sizes comparable. Naming the publication date keeps the promise honest, since KAM's own feed runs about two days behind.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 4 -->
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>The assumptions behind the maths</h2></div>
+  <p class="sec-note">Every number driving the recommendation is a user setting, not a hidden constant. Walking mode drops fuel from the calculation entirely, which matters in central Struga where several of these stores sit within a few hundred metres of each other.</p>
+  <div class="rack">
+
+    <div class="unit">
+      <div class="phone"><div class="screen">
+        <div class="statusbar"><i>09:48</i><i>LTE ▪ 81%</i></div>
+        <div class="appbar"><span class="back">‹</span><h3>Preferences</h3></div>
+        <div class="body">
+          <div style="padding:2px 2px">
+            <div class="setrow"><div class="grow"><div class="mk">Getting there</div></div>
+              <div class="seg"><span class="on">Car</span><span>Walk</span></div>
+            </div>
+            <div class="setrow" style="display:block">
+              <div style="display:flex; align-items:baseline"><div class="grow mk">Search radius</div><div class="den" style="font-size:13px">3.0 km</div></div>
+              <div class="slider"><i></i><b></b></div>
+              <div class="sub">8 stores in range</div>
+            </div>
+            <div class="setrow"><div class="grow"><div class="mk">Maximum stops</div><div class="sub">more stops, more savings, more time</div></div><div class="seg"><span>1</span><span class="on">2</span><span>3</span></div></div>
+            <div class="setrow"><div class="grow"><div class="mk">My time is worth</div><div class="sub">used to price the extra minutes</div></div><div class="trail den" style="font-size:14px">300/hr</div></div>
+            <div class="setrow"><div class="grow"><div class="mk">Fuel</div><div class="sub">6.2 L/100km · 86 den/L</div></div><div class="trail" style="color:var(--ink-3)">›</div></div>
+            <div style="padding:16px 0 8px"><div class="sub" style="letter-spacing:.1em; text-transform:uppercase; font-size:10px; font-weight:600">Markets</div></div>
+            <div class="setrow"><span class="dot d-kam"></span><div class="grow"><div class="mk">KAM</div><div class="sub">2 stores in Струга</div></div><div class="toggle"></div></div>
+            <div class="setrow"><span class="dot d-misa"></span><div class="grow"><div class="mk">Миса</div><div class="sub">4 stores in Струга</div></div><div class="toggle"></div></div>
+            <div class="setrow" style="border-bottom:none"><span class="dot d-kipper"></span><div class="grow"><div class="mk">Кипер</div><div class="sub">2 stores in Струга</div></div><div class="toggle off"></div></div>
+          </div>
+        </div>
+        <div class="ticker">prices refreshed nightly at 04:00</div>
+      </div></div>
+      <p class="caption"><b>Opt out, never opt in blind</b>Markets are predefined and curated. A person can exclude one they dislike, but cannot add an unvetted shop, which keeps data quality under your control.</p>
+    </div>
+
+    <div class="unit" style="width:360px">
+      <div style="border:1px solid var(--rule); border-radius:14px; padding:22px; background:var(--surface)">
+        <p class="eyebrow" style="margin-bottom:12px">Open questions</p>
+        <div style="display:flex; flex-direction:column; gap:15px; font-size:14px; color:var(--ink-2); line-height:1.5">
+          <div><b style="color:var(--ink)">Substitutions.</b> If Миса has no avocado, should the app silently offer a different brand, or always ask? The mockups assume ask.</div>
+          <div><b style="color:var(--ink)">Promo expiry.</b> A promo ending tonight changes the whole recommendation tomorrow. Worth a warning badge on the route screen?</div>
+          <div><b style="color:var(--ink)">Default time value.</b> 300 den/hour is a guess. It may be better to ship with time cost off and let people turn it on.</div>
+          <div><b style="color:var(--ink)">Walking radius.</b> Should switching to walking automatically shrink the 3 km radius, or leave it to the person?</div>
+        </div>
+      </div>
+      <p class="caption"><b>Decisions still to make</b>None of these block the build, but all four change the UI, so they are worth settling before the components get written.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  Store names, addresses, opening hours and price structures are taken from the published price lists of Kipper, KAM and Misa for Struga. Individual prices are illustrative and mixed with real observed figures.
+</footer>
+
+</div>

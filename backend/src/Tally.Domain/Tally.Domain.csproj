@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Zero dependencies, by design (backend/CLAUDE.md). Do not add package references. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tally.Domain.Tests" />
+  </ItemGroup>
+</Project>
